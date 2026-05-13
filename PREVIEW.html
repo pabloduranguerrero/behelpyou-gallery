@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BeHelpYou Gallery — Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf8f4;--bg-elev:#fff;--panel:#fff;--ink:#1a1a1a;--ink-2:#2c2926;
+    --muted:#6f6a63;--gold:#b08a4a;--gold-2:#c9a368;--gold-soft:#ede0c4;
+    --gold-faint:#f5ecd9;--line:#e9e2d3;--line-2:#efe9dc;--danger:#b34a4a;
+    --shadow:0 1px 2px rgba(26,26,26,.04),0 8px 24px rgba(26,26,26,.05);
+    --shadow-lg:0 10px 40px rgba(26,26,26,.10);
+    --font-display:'Cormorant Garamond', 'Times New Roman', serif;
+    --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{padding:0;margin:0}
+  body{background:#ece6d6;color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .nav{position:sticky;top:0;z-index:50;background:rgba(250,248,244,.92);backdrop-filter:saturate(120%) blur(8px);border-bottom:1px solid var(--line);padding:14px 22px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+  .nav button{background:transparent;border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all .15s ease}
+  .nav button:hover{color:var(--ink);border-color:var(--gold-soft)}
+  .nav button.active{color:#fff;background:var(--ink);border-color:var(--ink)}
+  .screen{display:none;background:var(--bg);min-height:780px;border-bottom:1px dashed var(--line)}
+  .screen.active{display:block}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.7);backdrop-filter:saturate(120%) blur(8px)}
+  .topbar img{height:36px;display:block}
+  .topbar .right{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .container{max-width:1100px;margin:0 auto;padding:28px 22px 80px}
+  .container-narrow{max-width:560px;margin:0 auto;padding:28px 22px 80px}
+  .display{font-family:var(--font-display);font-weight:500;letter-spacing:.005em}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:var(--ink)}
+  .eyebrow-gold{color:var(--gold)}
+  .muted{color:var(--muted)}
+  h1.display{font-size:clamp(36px,6vw,56px);line-height:1.05;margin:10px 0}
+  h2.display{font-size:clamp(26px,4vw,36px);line-height:1.15;margin:0 0 6px}
+  h3.display{font-size:clamp(20px,2.6vw,26px);line-height:1.25;margin:0 0 4px}
+  .hero{text-align:center;padding:48px 16px 28px}
+  .hero em{font-style:italic;color:var(--gold)}
+  .ornament{color:var(--gold);margin:0 auto 14px;display:block}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow)}
+  .field{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+  .field label{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .input{width:100%;background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 14px;font-family:inherit;font-size:15px;color:var(--ink)}
+  .input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(176,138,74,.15)}
+  .input-pin{text-align:center;letter-spacing:.6em;font-size:22px;font-weight:600;text-transform:uppercase;padding:16px 14px}
+  .textarea{width:100%;min-height:110px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 14px;font-family:inherit;font-size:15px;resize:vertical}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ink);color:#fff;border:1px solid var(--ink);border-radius:999px;padding:12px 22px;font-family:var(--font-body);font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .12s ease}
+  .btn:hover{background:var(--gold);border-color:var(--gold)}
+  .btn-gold{background:var(--gold);border-color:var(--gold)}
+  .btn-gold:hover{background:var(--ink);border-color:var(--ink)}
+  .btn-outline{background:transparent;color:var(--ink);border:1px solid var(--gold)}
+  .btn-outline:hover{background:var(--gold);color:#fff}
+  .btn-ghost{background:transparent;color:var(--muted);border:1px solid transparent;letter-spacing:.18em;padding:10px 16px}
+  .btn-ghost:hover{color:var(--ink);border-color:var(--line);background:#fff}
+  .btn-sm{padding:9px 16px;font-size:11px}
+  .btn-danger{background:#fff;color:var(--danger);border-color:var(--danger)}
+  .tabs{display:flex;justify-content:center;gap:2px;border-bottom:1px solid var(--line);margin:6px 0 26px;flex-wrap:wrap}
+  .tab{background:transparent;border:0;padding:14px 22px;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--gold)}
+  .tab .count{display:inline-block;margin-left:8px;font-size:10px;padding:2px 7px;border-radius:999px;background:var(--gold-faint);color:var(--gold);letter-spacing:.05em}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+  .tile{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;aspect-ratio:1/1;cursor:zoom-in;transition:transform .18s ease,box-shadow .18s ease}
+  .tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+  .tile img{width:100%;height:100%;object-fit:cover;display:block;background:#efe9dc}
+  .tile .badge{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.92);color:var(--ink);font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:5px 9px;border-radius:999px;border:1px solid var(--line)}
+  .tile .meta{position:absolute;left:0;right:0;bottom:0;padding:10px 12px;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.55) 100%);color:#fff;font-size:12px}
+  .tile .meta .name{font-weight:500}
+  .tile .own{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:999px;border:0;background:rgba(255,255,255,.95);color:var(--danger);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+  .messages{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+  .message-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px;position:relative;box-shadow:var(--shadow)}
+  .message-card::before{content:'\201C';font-family:var(--font-display);font-size:70px;line-height:.8;color:var(--gold-soft);position:absolute;top:8px;left:14px}
+  .message-card .body{font-family:var(--font-display);font-size:19px;line-height:1.5;color:var(--ink-2);margin:18px 0 14px;white-space:pre-wrap}
+  .message-card .sig{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+  .dropzone{border:1.5px dashed var(--gold-soft);border-radius:14px;background:#fffdf8;padding:36px 22px;text-align:center;cursor:pointer}
+  .dropzone:hover{border-color:var(--gold);background:var(--gold-faint)}
+  .dropzone .icon{width:44px;height:44px;border-radius:999px;background:var(--gold-faint);color:var(--gold);display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px}
+  .dropzone .hint{color:var(--muted);font-size:13px;margin-top:6px}
+  .preview-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .preview-thumb{position:relative;width:88px;height:88px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+  .preview-thumb img{width:100%;height:100%;object-fit:cover}
+  .preview-thumb button{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:999px;border:0;background:rgba(0,0,0,.55);color:#fff;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;justify-content:center}
+  /* logo-text replacement (for offline, no logo image needed) */
+  .logo-mark{font-family:var(--font-display);font-weight:600;font-size:30px;letter-spacing:-.02em;line-height:1;display:inline-flex;align-items:baseline;gap:0}
+  .logo-mark .b{color:var(--gold)}
+  .logo-mark .e{color:var(--ink)}
+  .logo-mark .dot{color:var(--ink)}
+  .logo-sub{font-family:var(--font-body);font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:var(--ink);font-weight:600;margin-top:-3px;text-align:center}
+  .logo-hero{display:flex;flex-direction:column;align-items:center;margin-bottom:24px}
+  .logo-hero .logo-mark{font-size:64px}
+  .logo-hero .logo-sub{font-size:11px;letter-spacing:.6em;margin-top:-4px}
+  .topbar .logo-mark{font-size:26px}
+  .topbar .logo-sub{font-size:7px;letter-spacing:.4em;margin-top:-3px}
+  /* Admin */
+  .stat-num{font-family:var(--font-display);font-size:28px;line-height:1}
+  .stat-lbl{color:var(--muted);font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+  /* Poster */
+  .poster{background:#faf8f4;width:520px;max-width:100%;border:4px double #b08a4a;padding:18px;box-shadow:0 30px 80px rgba(26,26,26,.12);margin:0 auto}
+  .poster-inner{border:1px solid #e9d8b3;padding:32px 24px 28px;text-align:center}
+  .qr-frame{background:#fff;padding:18px;display:inline-block;border-radius:6px;margin-top:10px}
+  .qr-frame svg{display:block}
+  .pin-pill{display:inline-block;margin-top:12px;padding:12px 28px;font-family:var(--font-body);font-weight:600;font-size:32px;letter-spacing:.5em;color:#1a1a1a;background:#fff;border:1px solid #e9d8b3;border-radius:999px}
+  .poster-foot{margin-top:26px;color:#b08a4a;font-size:11px;letter-spacing:.4em;font-weight:600}
+  /* Lightbox */
+  .lb{position:fixed;inset:0;background:rgba(15,12,8,.92);z-index:80;display:none;align-items:center;justify-content:center;padding:24px}
+  .lb.open{display:flex}
+  .lb img{max-width:96vw;max-height:86vh;border-radius:10px}
+  .lb .close{position:absolute;top:18px;right:18px;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18);width:44px;height:44px;border-radius:999px;cursor:pointer;font-size:22px;display:inline-flex;align-items:center;justify-content:center}
+  .preview-banner{background:var(--gold-faint);border-bottom:1px solid var(--gold-soft);padding:10px 18px;font-size:12px;letter-spacing:.1em;color:var(--gold);text-align:center}
+</style>
+</head>
+<body>
+
+<div class="preview-banner">PREVIEW ESTÁTICA · No funcional · Solo muestra el diseño visual de la app</div>
+
+<nav class="nav">
+  <button data-screen="home" class="active">Home / PIN</button>
+  <button data-screen="pin">Acceso boda</button>
+  <button data-screen="gallery">Galería</button>
+  <button data-screen="upload">Subir</button>
+  <button data-screen="messages">Dedicatorias</button>
+  <button data-screen="admin">Panel admin</button>
+  <button data-screen="qr">Cartel QR</button>
+</nav>
+
+<!-- ========================== HOME ========================== -->
+<section class="screen active" id="home">
+  <div class="topbar">
+    <div class="logo-mark"><span class="b">b</span><span class="e">e</span><span class="dot">.</span></div>
+    <div class="right">BeHelpYou · Gallery</div>
+  </div>
+  <main class="container-narrow">
+    <section class="hero">
+      <div class="logo-hero">
+        <div class="logo-mark"><span class="b">b</span><span class="e">e</span><span class="dot">.</span></div>
+        <div class="logo-sub">HELPYOU</div>
+      </div>
+      <svg class="ornament" width="64" height="32" viewBox="0 0 120 60" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M2 30 L48 30"/><path d="M72 30 L118 30"/>
+        <circle cx="60" cy="30" r="4"/>
+        <path d="M52 30 Q60 18 68 30 Q60 42 52 30 Z" fill="currentColor" opacity=".18"/>
+      </svg>
+      <p class="eyebrow eyebrow-gold">BeHelpYou&nbsp;·&nbsp;Gallery</p>
+      <h1 class="display">Comparte tus <em>recuerdos</em></h1>
+      <p class="muted" style="margin-top:10px;font-size:16px;max-width:420px;margin-left:auto;margin-right:auto">
+        Introduce el PIN que encontrarás en tu invitación o junto al código QR para acceder a la galería privada del evento.
+      </p>
+    </section>
+    <form class="card" onsubmit="event.preventDefault();show('pin')">
+      <div class="field">
+        <label>PIN del evento</label>
+        <input class="input input-pin" placeholder="••••••" value="TP2026" />
+      </div>
+      <button class="btn btn-gold" style="width:100%">Entrar</button>
+      <p class="muted" style="font-size:12px;margin-top:16px;text-align:center">Tu acceso es privado. Sólo verán las fotos quienes tengan el PIN.</p>
+    </form>
+    <p class="muted" style="text-align:center;margin-top:22px;font-size:12px;letter-spacing:.18em;text-transform:uppercase">Una experiencia de · BeHelpYou</p>
+  </main>
+</section>
+
+<!-- ========================== PIN GATE ========================== -->
+<section class="screen" id="pin">
+  <div class="topbar">
+    <div class="logo-mark"><span class="b">b</span><span class="e">e</span><span class="dot">.</span></div>
+    <div class="right">Teresa &amp; Pablo</div>
+  </div>
+  <main class="container-narrow">
+    <section class="hero">
+      <p class="eyebrow eyebrow-gold">Acceso privado</p>
+      <h1 class="display">Teresa &amp; Pablo</h1>
+      <p class="muted">22 de Agosto de 2026</p>
+    </section>
+    <form class="card" onsubmit="event.preventDefault();show('gallery')">
+      <div class="field">
+        <label>Introduce el PIN del evento</label>
+        <input class="input input-pin" value="TP2026" />
+      </div>
+      <button class="btn btn-gold" style="width:100%">Entrar</button>
+    </form>
+  </main>
+</section>
+
+<!-- ========================== GALLERY ========================== -->
+<section class="screen" id="gallery">
+  <div class="topbar">
+    <div class="logo-mark"><span class="b">b</span><span class="e">e</span><span class="dot">.</span></div>
+    <div class="right">Teresa &amp; Pablo</div>
+  </div>
+  <main class="container">
+    <section class="hero">
+      <svg class="ornament" width="64" height="32" viewBox="0 0 120 60" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M2 30 L48 30"/><path d="M72 30 L118 30"/><circle cx="60" cy="30" r="4"/>
+        <path d="M52 30 Q60 18 68 30 Q60 42 52 30 Z" fill="currentColor" opacity=".18"/>
+      </svg>
+      <p class="eyebrow eyebrow-gold">Galería privada</p>
+      <h1 class="display">Teresa <em>&amp;</em> Pablo</h1>
+      <p class="muted" style="letter-spacing:.1em;text-transform:uppercase;font-size:12px">22 de Agosto de 2026</p>
+      <p class="muted" style="font-style:italic">#TeresaYPablo2026</p>
+    </section>
+    <nav class="tabs">
+      <button class="tab active">Galería <span class="count">12</span></button>
+      <button class="tab" onclick="show('upload')">Subir</button>
+      <button class="tab" onclick="show('messages')">Dedicatorias <span class="count">4</span></button>
+    </nav>
+    <div class="grid" id="grid"></div>
+  </main>
+</section>
+
+<!-- ========================== UPLOAD ========================== -->
+<section class="screen" id="upload">
+  <div class="topbar">
+    <div class="logo-mark"><span class="b">b</span><span class="e">e</span><span class="dot">.</span></div>
+    <div class="right">Teresa &amp; Pablo</div>
+  </div>
+  <main class="container">
+    <section class="hero">
+      <svg class="ornament" width="48" height="24" viewBox="0 0 120 60" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M2 30 L48 30"/><path d="M72 30 L118 30"/><circle cx="60" cy="30" r="4"/>
+        <path d="M52 30 Q60 18 68 30 Q60 42 52 30 Z" fill="currentColor" opacity=".18"/>
+      </svg>
+      <p class="eyebrow eyebrow-gold">Galería privada</p>
+      <h1 class="display">Teresa <em>&amp;</em> Pablo</h1>
+    </section>
+    <nav class="tabs">
+      <button class="tab" onclick="show('gallery')">Galería <span class="count">12</span></button>
+      <button class="tab active">Subir</button>
+      <button class="tab" onclick="show('messages')">Dedicatorias <span class="count">4</span></button>
+    </nav>
+    <section class="card">
+      <h2 class="display">Comparte un recuerdo</h2>
+      <p class="muted" style="margin-top:-4px;margin-bottom:18px">Sube una o varias fotos / vídeos cortos. Aparecerán al instante en la galería.</p>
+      <div class="field">
+        <label>Tu nombre (aparecerá junto a tu foto)</label>
+        <input class="input" value="Lucía" />
+      </div>
+      <div class="dropzone">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 16V4m0 0l-5 5m5-5l5 5"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/>
+          </svg>
+        </div>
+        <div class="display" style="font-size:22px">Toca aquí o arrastra archivos</div>
+        <div class="hint">Fotos y vídeos hasta 50MB cada uno</div>
+      </div>
+      <div class="preview-row">
+        <div class="preview-thumb"><img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200&h=200&fit=crop"/><button>×</button></div>
+        <div class="preview-thumb"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200&h=200&fit=crop"/><button>×</button></div>
+        <div class="preview-thumb"><img src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=200&h=200&fit=crop"/><button>×</button></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap">
+        <button class="btn btn-ghost">Cancelar</button>
+        <button class="btn btn-gold">Subir 3 recuerdos</button>
+      </div>
+      <p class="muted" style="margin-top:22px;font-size:12px;text-align:center">Sólo tú podrás eliminar las fotos que subas desde este dispositivo.</p>
+    </section>
+  </main>
+</section>
+
+<!-- ========================== MESSAGES ========================== -->
+<section class="screen" id="messages">
+  <div class="topbar">
+    <div class="logo-mark"><span class="b">b</span><span class="e">e</span><span class="dot">.</span></div>
+    <div class="right">Teresa &amp; Pablo</div>
+  </div>
+  <main class="container">
+    <section class="hero">
+      <p class="eyebrow eyebrow-gold">Galería privada</p>
+      <h1 class="display">Teresa <em>&amp;</em> Pablo</h1>
+    </section>
+    <nav class="tabs">
+      <button class="tab" onclick="show('gallery')">Galería <span class="count">12</span></button>
+      <button class="tab" onclick="show('upload')">Subir</button>
+      <button class="tab active">Dedicatorias <span class="count">4</span></button>
+    </nav>
+    <div class="card" style="margin-bottom:22px">
+      <h2 class="display">Deja una dedicatoria</h2>
+      <p class="muted" style="margin-top:-4px;margin-bottom:14px">Unas palabras para los novios. Quedará para siempre en su libro digital.</p>
+      <div class="field"><label>Tu nombre</label><input class="input" value="Lucía"/></div>
+      <div class="field"><label>Tu dedicatoria</label><textarea class="textarea" placeholder="Os deseamos lo mejor en este día tan especial…"></textarea></div>
+      <div style="display:flex;justify-content:flex-end"><button class="btn btn-gold">Enviar dedicatoria</button></div>
+    </div>
+    <div class="messages">
+      <article class="message-card">
+        <p class="body">Os deseamos toda la felicidad del mundo. Que vuestro amor crezca cada día como ha crecido a lo largo de estos años.</p>
+        <div class="sig"><span>— María &amp; Antonio</span></div>
+      </article>
+      <article class="message-card">
+        <p class="body">¡Vivan los novios! Ha sido el día más bonito que recuerdo. Gracias por dejarnos ser parte.</p>
+        <div class="sig"><span>— Carlos</span></div>
+      </article>
+      <article class="message-card">
+        <p class="body">Que esta sea la primera de muchas celebraciones. Os queremos mucho.</p>
+        <div class="sig"><span>— Familia García</span></div>
+      </article>
+      <article class="message-card">
+        <p class="body">Brindo por vuestra felicidad. Que la vida os regale tantos momentos como los que nos habéis regalado hoy.</p>
+        <div class="sig"><span>— Lucía</span><button style="background:none;border:0;color:var(--danger);cursor:pointer;font-size:11px;letter-spacing:.18em">Eliminar</button></div>
+      </article>
+    </div>
+  </main>
+</section>
+
+<!-- ========================== ADMIN ========================== -->
+<section class="screen" id="admin">
+  <div class="topbar">
+    <div class="logo-mark"><span class="b">b</span><span class="e">e</span><span class="dot">.</span></div>
+    <div class="right" style="display:flex;gap:10px">
+      <button class="btn btn-ghost btn-sm" onclick="show('qr')">Generar QR</button>
+      <button class="btn btn-ghost btn-sm">Salir</button>
+    </div>
+  </div>
+  <main class="container">
+    <section class="hero" style="padding-top:24px;padding-bottom:16px">
+      <p class="eyebrow eyebrow-gold">Panel admin</p>
+      <h1 class="display">BeHelpYou Gallery</h1>
+    </section>
+    <div class="card" style="margin-bottom:18px">
+      <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
+        <div style="display:flex;gap:24px;flex-wrap:wrap">
+          <div><div class="stat-num">12</div><div class="stat-lbl">Fotos</div></div>
+          <div><div class="stat-num">3</div><div class="stat-lbl">Vídeos</div></div>
+          <div><div class="stat-num">4</div><div class="stat-lbl">Dedicatorias</div></div>
+          <div><div class="stat-num">0</div><div class="stat-lbl">Ocultas</div></div>
+          <div><div class="stat-num">19</div><div class="stat-lbl">Total</div></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="input" style="min-width:180px"><option>Todas las bodas</option><option>teresa-pablo</option></select>
+          <button class="btn btn-outline btn-sm">Refrescar</button>
+          <button class="btn btn-gold btn-sm">Descargar ZIP</button>
+        </div>
+      </div>
+    </div>
+    <nav class="tabs">
+      <button class="tab active">Todo</button><button class="tab">Fotos</button><button class="tab">Vídeos</button><button class="tab">Dedicatorias</button><button class="tab">Ocultas</button>
+    </nav>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px" id="adminGrid"></div>
+  </main>
+</section>
+
+<!-- ========================== QR POSTER ========================== -->
+<section class="screen" id="qr">
+  <div class="topbar">
+    <div class="logo-mark"><span class="b">b</span><span class="e">e</span><span class="dot">.</span></div>
+    <div class="right"><button class="btn btn-ghost btn-sm" onclick="show('admin')">← Volver al panel</button></div>
+  </div>
+  <main class="container">
+    <section class="hero" style="padding-top:24px;padding-bottom:12px">
+      <p class="eyebrow eyebrow-gold">Cartel para imprimir</p>
+      <h1 class="display">Código QR &amp; PIN</h1>
+      <p class="muted">Imprímelo y colócalo en mesas, photocall, o en la propia invitación.</p>
+    </section>
+    <div class="card" style="margin-bottom:24px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
+      <div><div class="stat-lbl">Boda</div><select class="input"><option>Teresa &amp; Pablo</option></select></div>
+      <div style="flex:1;min-width:260px"><div class="stat-lbl">URL del QR</div><input class="input" value="https://behelpyou.com/behelpyou-gallery/evento/teresa-pablo" readonly/></div>
+      <div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm">Imprimir</button><button class="btn btn-gold btn-sm">Descargar PNG</button></div>
+    </div>
+    <div style="display:flex;justify-content:center;padding:12px 0 40px">
+      <div class="poster">
+        <div class="poster-inner">
+          <p class="eyebrow eyebrow-gold" style="letter-spacing:.4em">BeHelpYou&nbsp;·&nbsp;Gallery</p>
+          <h2 class="display" style="font-size:44px;margin-top:14px">Teresa &amp; Pablo</h2>
+          <p class="muted" style="margin-top:4px;letter-spacing:.16em;text-transform:uppercase;font-size:12px">22 de Agosto de 2026</p>
+          <svg class="ornament" width="70" height="35" viewBox="0 0 120 60" fill="none" stroke="currentColor" stroke-width="1.2" style="margin:12px auto">
+            <path d="M2 30 L48 30"/><path d="M72 30 L118 30"/><circle cx="60" cy="30" r="4"/>
+            <path d="M52 30 Q60 18 68 30 Q60 42 52 30 Z" fill="currentColor" opacity=".18"/>
+          </svg>
+          <div class="qr-frame">
+            <!-- Mock QR -->
+            <svg width="320" height="320" viewBox="0 0 32 32">
+              <rect width="32" height="32" fill="#fff"/>
+              <g fill="#1a1a1a">
+                <!-- corner finders -->
+                <rect x="0" y="0" width="7" height="7"/><rect x="1" y="1" width="5" height="5" fill="#fff"/><rect x="2" y="2" width="3" height="3"/>
+                <rect x="25" y="0" width="7" height="7"/><rect x="26" y="1" width="5" height="5" fill="#fff"/><rect x="27" y="2" width="3" height="3"/>
+                <rect x="0" y="25" width="7" height="7"/><rect x="1" y="26" width="5" height="5" fill="#fff"/><rect x="2" y="27" width="3" height="3"/>
+                <!-- noise -->
+                <g id="noise"></g>
+              </g>
+            </svg>
+          </div>
+          <p class="display" style="font-size:28px;font-style:italic;margin-top:22px">Comparte tus recuerdos</p>
+          <p class="muted" style="margin-top:4px">Escanea el código y entra con este PIN:</p>
+          <div class="pin-pill">TP2026</div>
+          <p class="muted" style="font-size:12px;margin-top:14px">behelpyou.com/behelpyou-gallery/evento/teresa-pablo</p>
+          <div class="poster-foot">B E H E L P Y O U . C O M</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!-- Lightbox -->
+<div class="lb" id="lb" onclick="this.classList.remove('open')">
+  <button class="close">×</button>
+  <img id="lbImg" alt=""/>
+</div>
+
+<script>
+  // Photos for gallery + admin (Unsplash, free)
+  const photos = [
+    'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=600&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1525772764200-be829a350797?w=600&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=600&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=600&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1521543387302-f0f0fa5d11ed?w=600&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=600&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1477601263568-180e2c6d046e?w=600&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1530023367847-a683933f4172?w=600&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=600&h=600&fit=crop'
+  ];
+  const names = ['Lucía','Carlos','Marta','Pedro','Ana','Sofía','Javier','Elena','Alba','Pablo','Teresa','Diego'];
+  const grid = document.getElementById('grid');
+  photos.forEach((src,i) => {
+    const own = i === 0 || i === 3 || i === 7; // mark some as "own" for demo
+    const isVideo = i === 5;
+    const el = document.createElement('div');
+    el.className='tile';
+    el.innerHTML = `
+      <img src="${src}" alt="" loading="lazy"/>
+      ${isVideo ? '<span class="badge">Vídeo</span>' : ''}
+      <div class="meta"><span class="name">${names[i]}</span></div>
+      ${own ? `<button class="own" title="Eliminar mi subida">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+      </button>`:''}
+    `;
+    el.onclick = () => { document.getElementById('lbImg').src = src; document.getElementById('lb').classList.add('open'); };
+    grid.appendChild(el);
+  });
+  // Admin grid
+  const ag = document.getElementById('adminGrid');
+  photos.slice(0,8).forEach((src,i)=>{
+    const card = document.createElement('article');
+    card.className='card';
+    card.style.cssText='padding:0;overflow:hidden';
+    const isMsg = i===6;
+    card.innerHTML = isMsg
+      ? `<div style="padding:18px;font-family:var(--font-display);font-size:17px;color:var(--ink-2);min-height:140px">"Os deseamos toda la felicidad."</div>
+         <div style="padding:14px"><div style="display:flex;justify-content:space-between;font-size:12px"><span style="font-weight:600">${names[i]}</span><span class="muted">teresa-pablo</span></div><div class="muted" style="font-size:11px;margin-top:4px">22/08/2026 19:42</div><div style="display:flex;gap:6px;margin-top:12px"><button class="btn btn-ghost btn-sm">Ocultar</button><button class="btn btn-danger btn-sm">Eliminar</button></div></div>`
+      : `<img src="${src}" style="width:100%;aspect-ratio:1/1;object-fit:cover"/>
+         <div style="padding:14px"><div style="display:flex;justify-content:space-between;font-size:12px"><span style="font-weight:600">${names[i]}</span><span class="muted">teresa-pablo</span></div><div class="muted" style="font-size:11px;margin-top:4px">22/08/2026 19:42</div><div style="display:flex;gap:6px;margin-top:12px"><button class="btn btn-ghost btn-sm">Ocultar</button><button class="btn btn-danger btn-sm">Eliminar</button></div></div>`;
+    ag.appendChild(card);
+  });
+  // QR noise
+  const noise = document.getElementById('noise');
+  if (noise) {
+    let s = '';
+    for (let y=0;y<32;y++) for (let x=0;x<32;x++){
+      // skip corner finder areas
+      if ((x<8&&y<8)||(x>23&&y<8)||(x<8&&y>23)) continue;
+      if (Math.random()<0.5) s += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+    }
+    noise.innerHTML = s;
+  }
+  // Nav
+  function show(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active', s.id===id));
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active', b.dataset.screen===id));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('.nav button').forEach(b => b.onclick = () => show(b.dataset.screen));
+</script>
+</body>
+</html>
