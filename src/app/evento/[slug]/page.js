@@ -64,7 +64,9 @@ export default function EventPage({ params }) {
       .eq('hidden', false)
       .order('created_at', { ascending: false });
     if (error) {
-      showToast('No se ha podido cargar la galería', true);
+      console.error('LOAD_ERROR', error);
+      const msg = error?.message || JSON.stringify(error);
+      showToast(`Error al cargar: ${msg}`, true);
     } else {
       const all = data || [];
       setItems(all.filter((x) => x.type === 'photo' || x.type === 'video'));
