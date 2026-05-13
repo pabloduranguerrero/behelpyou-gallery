@@ -11,6 +11,19 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '60mb'
     }
+  },
+  // Si alguien entra a la raiz del dominio Vercel sin el subpath,
+  // lo mandamos a /behelpyou-gallery para evitar el 404.
+  // basePath: false hace que la regla actue sobre la raiz absoluta.
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/behelpyou-gallery',
+        basePath: false,
+        permanent: false
+      }
+    ];
   }
 };
 
