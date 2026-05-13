@@ -441,8 +441,10 @@ export default function EventPage({ params }) {
               </>
             )}
 
-            <p className="muted" style={{ marginTop: 22, fontSize: 12, textAlign: 'center' }}>
-              Sólo tú podrás eliminar las fotos que subas desde este dispositivo.
+            <p className="muted" style={{ marginTop: 22, fontSize: 11, textAlign: 'center', lineHeight: 1.5 }}>
+              Al subir aceptas que tus fotos y vídeos sean visibles para los invitados con PIN.
+              Sólo tú podrás eliminarlos desde este dispositivo. Para retirar contenido en el que apareces,
+              escribe a <a href="mailto:hola@behelpyou.com" style={{ color: 'var(--gold)' }}>hola@behelpyou.com</a>.
             </p>
           </section>
         )}
@@ -483,6 +485,9 @@ export default function EventPage({ params }) {
                   </button>
                 </div>
               </form>
+              <p className="muted" style={{ marginTop: 14, fontSize: 11, textAlign: 'center', lineHeight: 1.5 }}>
+                Al enviar aceptas que tu dedicatoria sea visible para los invitados con PIN.
+              </p>
             </div>
 
             {messages.length === 0 ? (

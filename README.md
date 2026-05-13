@@ -38,9 +38,10 @@ npm run dev                     # http://localhost:3000/behelpyou-gallery
 ### 2.1 Crear proyecto
 
 1. Crea un proyecto en https://supabase.com.
-2. Copia `Project URL` (NEXT_PUBLIC_SUPABASE_URL), `anon key`
-   (NEXT_PUBLIC_SUPABASE_ANON_KEY) y `service_role key`
-   (SUPABASE_SERVICE_ROLE_KEY — sólo servidor).
+2. Copia las claves desde Project Settings → API:
+   - `Project URL` → variable `NEXT_PUBLIC_SUPABASE_URL`
+   - `anon public` → variable `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `service_role` → variable `SUPABASE_SERVICE_ROLE_KEY` (¡SECRETA! solo en servidor, nunca en este README ni en el repo).
 
 ### 2.2 Esquema SQL
 
