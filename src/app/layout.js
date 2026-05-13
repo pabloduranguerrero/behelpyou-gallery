@@ -1,5 +1,6 @@
 import './globals.css';
 import { Cormorant_Garamond, Inter } from 'next/font/google';
+import { LOGO_SRC } from '@/lib/assets';
 
 const display = Cormorant_Garamond({
   subsets: ['latin'],
@@ -19,7 +20,7 @@ export const metadata = {
   title: 'BeHelpYou Gallery',
   description: 'Galería privada de momentos para tu boda — sube y comparte recuerdos en segundos.',
   themeColor: '#faf8f4',
-  icons: { icon: '/logo-behelpyou.png' }
+  icons: { icon: LOGO_SRC }
 };
 
 export default function RootLayout({ children }) {

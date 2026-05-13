@@ -6,6 +6,7 @@ import BrandHeader from '@/components/BrandHeader';
 import Footer from '@/components/Footer';
 import Ornament from '@/components/Ornament';
 import { findEventByPin } from '@/lib/events';
+import { LOGO_SRC } from '@/lib/assets';
 
 export default function Home() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function Home() {
       <main className="container-narrow">
         <section className="hero">
           <div className="logo-hero">
-            <img src="/logo-behelpyou.png" alt="BeHelpYou" />
+            <img src={LOGO_SRC} alt="BeHelpYou" />
           </div>
           <Ornament className="ornament" size={64} />
           <p className="eyebrow eyebrow-gold">BeHelpYou&nbsp;·&nbsp;Gallery</p>

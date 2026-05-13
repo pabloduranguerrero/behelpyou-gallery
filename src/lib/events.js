@@ -1,10 +1,14 @@
-// Helpers para gestionar eventos (slug + PIN) desde variables de entorno.
+// Helpers para gestionar eventos (slug + PIN).
 //
-// Formato esperado en .env:
-//   NEXT_PUBLIC_EVENT_PINS=teresa-pablo:TP2026,maria-juan:MJ0925
+// Por simplicidad (y porque el PIN no es un secreto fuerte: va impreso en
+// el papel del QR), los PINs estan hardcodeados aqui con un fallback.
+// Si quieres sobreescribirlos sin tocar codigo, usa la variable de entorno
+// NEXT_PUBLIC_EVENT_PINS=teresa-pablo:TP2026,maria-juan:MJ0925
 //
-// Cada slug representa una boda. El "label" se calcula a partir del slug,
-// pero puedes ampliar EVENT_META para personalizarlo.
+// El slug es el identificador interno; el PIN es lo que tecleara el invitado.
+
+// === FALLBACK: edita aqui para anadir/cambiar bodas y PINs sin redesplegar variables ===
+const DEFAULT_PINS = 'teresa-pablo:TP2026';
 
 export const EVENT_META = {
   'teresa-pablo': {
@@ -27,14 +31,15 @@ function parsePins(raw) {
 
 // SOLO en el servidor (lee EVENT_PINS, sin el prefijo NEXT_PUBLIC_)
 export function getServerPins() {
-  return parsePins(process.env.EVENT_PINS || process.env.NEXT_PUBLIC_EVENT_PINS);
+  return parsePins(
+    process.env.EVENT_PINS || process.env.NEXT_PUBLIC_EVENT_PINS || DEFAULT_PINS
+  );
 }
 
-// En el cliente usamos NEXT_PUBLIC_EVENT_PINS para validar localmente
-// antes de redirigir. Es aceptable porque el PIN va en el papel del QR
-// que ya tiene el invitado: no es un secreto fuerte.
+// En el cliente: si la variable de entorno no esta definida, usa el fallback
+// hardcodeado para que la app siempre funcione.
 export function getClientPins() {
-  return parsePins(process.env.NEXT_PUBLIC_EVENT_PINS);
+  return parsePins(process.env.NEXT_PUBLIC_EVENT_PINS || DEFAULT_PINS);
 }
 
 export function findEventByPin(pin) {
