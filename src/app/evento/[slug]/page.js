@@ -176,8 +176,9 @@ export default function EventPage({ params }) {
         });
         if (insertErr) throw insertErr;
       } catch (err) {
-        console.error(err);
-        showToast(`Error subiendo "${item.file.name}"`, true);
+        console.error('UPLOAD_ERROR', err);
+        const msg = err?.message || err?.error_description || JSON.stringify(err);
+        showToast(`Error: ${msg}`, true);
       }
       done += 1;
       setProgress(Math.round((done / files.length) * 100));
@@ -226,7 +227,9 @@ export default function EventPage({ params }) {
     });
     setPostingMsg(false);
     if (error) {
-      showToast('No se pudo enviar la dedicatoria', true);
+      console.error('MESSAGE_ERROR', error);
+      const msg = error?.message || JSON.stringify(error);
+      showToast(`Error: ${msg}`, true);
       return;
     }
     setMessageText('');
