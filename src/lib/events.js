@@ -15,7 +15,10 @@ export const EVENT_META = {
     couple: 'Teresa & Pablo',
     date: '22 de Agosto de 2026',
     location: '',
-    hashtag: '#TeresaYPablo2026'
+    hashtag: '#TeresaYPablo2026',
+    // URL publica del invitado: a donde apunta el QR.
+    // Aqui ponemos la URL bonita de tu WordPress que carga el iframe.
+    publicUrl: 'https://behelpyou.com/galeria-teresaypablo'
   }
 };
 

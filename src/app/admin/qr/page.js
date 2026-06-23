@@ -23,7 +23,11 @@ export default function QrPage() {
     else if (typeof window !== 'undefined') setSiteUrl(window.location.origin);
   }, []);
 
-  const eventUrl = `${siteUrl.replace(/\/$/, '')}/behelpyou-gallery/evento/${slug}`;
+  // Si la boda tiene publicUrl personalizada (ej. behelpyou.com/galeria-teresaypablo),
+  // la usamos. Si no, fallback al subpath /behelpyou-gallery/evento/{slug}.
+  const eventUrl = meta.publicUrl
+    ? meta.publicUrl
+    : `${siteUrl.replace(/\/$/, '')}/behelpyou-gallery/evento/${slug}`;
 
   const downloadPng = async () => {
     const node = cardRef.current;
