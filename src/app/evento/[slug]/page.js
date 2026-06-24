@@ -10,6 +10,66 @@ import { getUploaderId, getGuestName, setGuestName } from '@/lib/uploaderId';
 
 const MAX_FILE_MB = 50;
 
+// Genera una miniatura JPEG a partir del primer frame "interesante" de un video.
+// Devuelve un Blob listo para subir o null si no se ha podido.
+function generateVideoThumbnail(file) {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.muted = true;
+    video.playsInline = true;
+    video.src = URL.createObjectURL(file);
+
+    const cleanup = () => {
+      try { URL.revokeObjectURL(video.src); } catch {}
+    };
+
+    let captured = false;
+    const capture = () => {
+      if (captured) return;
+      captured = true;
+      try {
+        const w = video.videoWidth;
+        const h = video.videoHeight;
+        if (!w || !h) {
+          cleanup();
+          return resolve(null);
+        }
+        const max = 720;
+        const scale = Math.min(1, max / Math.max(w, h));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(w * scale);
+        canvas.height = Math.round(h * scale);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(
+          (blob) => {
+            cleanup();
+            resolve(blob);
+          },
+          'image/jpeg',
+          0.85
+        );
+      } catch (e) {
+        cleanup();
+        reject(e);
+      }
+    };
+
+    video.onloadedmetadata = () => {
+      // Saltamos un poquito hacia delante para evitar frame negro inicial.
+      const target = Math.min(0.5, (video.duration || 1) * 0.1);
+      try { video.currentTime = target; }
+      catch { capture(); }
+    };
+
+    video.onseeked = capture;
+    video.onerror = () => { cleanup(); resolve(null); };
+    // Failsafe por si seeked no dispara en algun movil
+    setTimeout(() => { if (!captured) capture(); }, 4000);
+  });
+}
+
 export default function EventPage({ params }) {
   const slug = params.slug;
   const meta = useMemo(() => getEventMeta(slug), [slug]);
@@ -157,7 +217,8 @@ export default function EventPage({ params }) {
       try {
         const ext = (item.file.name.split('.').pop() || 'bin').toLowerCase();
         const folder = item.type === 'video' ? 'videos' : 'photos';
-        const path = `${slug}/${folder}/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const stamp = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        const path = `${slug}/${folder}/${stamp}.${ext}`;
 
         const up = await supabase.storage
           .from(STORAGE_BUCKET)
@@ -167,12 +228,34 @@ export default function EventPage({ params }) {
 
         const { data: pub } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
 
+        // Para videos, generamos una miniatura del primer frame y la subimos aparte.
+        let thumbUrl = null;
+        if (item.type === 'video') {
+          try {
+            const thumbBlob = await generateVideoThumbnail(item.file);
+            if (thumbBlob) {
+              const thumbPath = `${slug}/thumbs/${stamp}.jpg`;
+              const upThumb = await supabase.storage
+                .from(STORAGE_BUCKET)
+                .upload(thumbPath, thumbBlob, { cacheControl: '3600', upsert: false, contentType: 'image/jpeg' });
+              if (!upThumb.error) {
+                const { data: thumbPub } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(thumbPath);
+                thumbUrl = thumbPub.publicUrl;
+              }
+            }
+          } catch (thumbErr) {
+            console.warn('THUMB_ERROR', thumbErr);
+            // Si falla la miniatura, seguimos sin ella (no es bloqueante).
+          }
+        }
+
         const { error: insertErr } = await supabase.from('wedding_items').insert({
           event_slug: slug,
           type: item.type,
           guest_name: (name || '').trim() || 'Invitado anónimo',
           uploader_id: uploaderId,
           file_url: pub.publicUrl,
+          thumb_url: thumbUrl,
           storage_path: path,
           mime_type: item.file.type
         });
@@ -344,11 +427,24 @@ export default function EventPage({ params }) {
                   return (
                     <div key={it.id} className="tile" onClick={() => openAt(i)}>
                       {it.type === 'video' ? (
-                        <video src={it.file_url} preload="metadata" muted playsInline />
+                        it.thumb_url ? (
+                          <img src={it.thumb_url} alt={`Vídeo de ${it.guest_name}`} loading="lazy" />
+                        ) : (
+                          <video src={it.file_url} preload="metadata" muted playsInline />
+                        )
                       ) : (
                         <img src={it.file_url} alt={`Recuerdo de ${it.guest_name}`} loading="lazy" />
                       )}
-                      {it.type === 'video' && <span className="badge">Vídeo</span>}
+                      {it.type === 'video' && (
+                        <>
+                          <span className="badge">Vídeo</span>
+                          <span className="play-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M8 5v14l11-7L8 5z" />
+                            </svg>
+                          </span>
+                        </>
+                      )}
                       <div className="meta">
                         <span className="name">{it.guest_name}</span>
                       </div>

@@ -1,12 +1,17 @@
-import Link from 'next/link';
 import { LOGO_SRC } from '@/lib/assets';
 
 export default function BrandHeader({ rightSlot = null }) {
   return (
     <header className="topbar">
-      <Link href="/" className="logo" aria-label="BeHelpYou Gallery">
+      <a
+        href="https://behelpyou.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="logo"
+        aria-label="Ir a behelpyou.com"
+      >
         <img src={LOGO_SRC} alt="BeHelpYou" />
-      </Link>
+      </a>
       <div className="right">
         {rightSlot}
       </div>

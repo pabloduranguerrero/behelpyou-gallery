@@ -40,9 +40,15 @@ export default function Home() {
       <BrandHeader />
       <main className="container-narrow">
         <section className="hero">
-          <div className="logo-hero">
+          <a
+            href="https://behelpyou.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="logo-hero"
+            aria-label="Ir a behelpyou.com"
+          >
             <img src={LOGO_SRC} alt="BeHelpYou" />
-          </div>
+          </a>
           <Ornament className="ornament" size={64} />
           <p className="eyebrow eyebrow-gold">BeHelpYou&nbsp;·&nbsp;Gallery</p>
           <h1 className="display" style={{ marginTop: 12 }}>
