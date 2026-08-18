@@ -91,27 +91,23 @@ export default function QrPage() {
     // Texto invitación
     ctx.fillStyle = '#1a1a1a';
     ctx.font = italicFont;
-    ctx.fillText('Comparte tus recuerdos', W / 2, 1290);
+    ctx.fillText('Comparte tus recuerdos', W / 2, 1320);
 
     ctx.font = '500 24px "Inter", system-ui, sans-serif';
     ctx.fillStyle = '#6f6a63';
-    ctx.fillText('Escanea el código y entra con este PIN:', W / 2, 1340);
-
-    ctx.font = pinFont;
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillText(pin, W / 2, 1450);
+    ctx.fillText('Escanea el código con la cámara de tu móvil', W / 2, 1390);
 
     ctx.font = '500 20px "Inter", system-ui, sans-serif';
     ctx.fillStyle = '#6f6a63';
-    ctx.fillText(eventUrl.replace(/^https?:\/\//, ''), W / 2, 1520);
+    ctx.fillText(eventUrl.replace(/^https?:\/\//, ''), W / 2, 1490);
 
     ctx.font = '600 16px "Inter", system-ui, sans-serif';
     ctx.fillStyle = '#b08a4a';
-    ctx.fillText('B E H E L P Y O U .  C O M', W / 2, 1620);
+    ctx.fillText('B E H E L P Y O U .  C O M', W / 2, 1600);
 
     const url = c.toDataURL('image/png');
     const a = document.createElement('a');
-    a.href = url; a.download = `qr-${slug}-${pin}.png`;
+    a.href = url; a.download = `qr-${slug}.png`;
     a.click();
   };
 
@@ -123,7 +119,7 @@ export default function QrPage() {
       <main className="container">
         <section className="hero" style={{ paddingTop: 24, paddingBottom: 12 }}>
           <p className="eyebrow eyebrow-gold">Cartel para imprimir</p>
-          <h1 className="display" style={{ marginTop: 8 }}>Código QR &amp; PIN</h1>
+          <h1 className="display" style={{ marginTop: 8 }}>Código QR</h1>
           <p className="muted" style={{ marginTop: 8 }}>
             Imprímelo y colócalo en mesas, photocall, o en la propia invitación.
           </p>
@@ -160,9 +156,8 @@ export default function QrPage() {
               </div>
 
               <p className="display" style={{ fontSize: 28, fontStyle: 'italic', marginTop: 22 }}>Comparte tus recuerdos</p>
-              <p className="muted" style={{ marginTop: 4 }}>Escanea el código y entra con este PIN:</p>
-              <div className="pin-pill">{pin}</div>
-              <p className="muted" style={{ fontSize: 12, marginTop: 14 }}>{eventUrl.replace(/^https?:\/\//, '')}</p>
+              <p className="muted" style={{ marginTop: 6 }}>Escanea el código con la cámara de tu móvil</p>
+              <p className="muted" style={{ fontSize: 12, marginTop: 18 }}>{eventUrl.replace(/^https?:\/\//, '')}</p>
 
               <div className="poster-foot">B E H E L P Y O U . C O M</div>
             </div>

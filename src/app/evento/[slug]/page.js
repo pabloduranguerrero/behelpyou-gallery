@@ -74,7 +74,9 @@ export default function EventPage({ params }) {
   const slug = params.slug;
   const meta = useMemo(() => getEventMeta(slug), [slug]);
 
-  const [authed, setAuthed] = useState(false);
+  // PIN desactivado: acceso directo a la galeria.
+  // Para reactivarlo, cambia el "true" por "false".
+  const [authed, setAuthed] = useState(true);
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState('');
 
