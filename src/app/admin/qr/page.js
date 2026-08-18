@@ -218,10 +218,15 @@ export default function QrPage() {
               <p className="eyebrow eyebrow-gold" style={{ letterSpacing: '0.4em' }}>BeHelpYou&nbsp;·&nbsp;Gallery</p>
               <h2 className="display" style={{ fontSize: 44, marginTop: 14 }}>{meta.couple}</h2>
               {meta.date && <p className="muted" style={{ marginTop: 4, letterSpacing: '0.16em', textTransform: 'uppercase', fontSize: 12 }}>{meta.date}</p>}
-              <Ornament className="ornament" size={70} />
 
-              <div className="qr-frame">
-                <QRCodeSVG value={eventUrl} size={320} bgColor="#ffffff" fgColor="#1a1a1a" level="H" includeMargin={false} />
+              <div style={{ display: 'block', textAlign: 'center', margin: '14px auto' }}>
+                <Ornament className="ornament" size={70} />
+              </div>
+
+              <div style={{ display: 'block', textAlign: 'center', margin: '10px auto 0' }}>
+                <div className="qr-frame" style={{ display: 'inline-block' }}>
+                  <QRCodeSVG value={eventUrl} size={320} bgColor="#ffffff" fgColor="#1a1a1a" level="H" includeMargin={false} />
+                </div>
               </div>
 
               <p className="display" style={{ fontSize: 28, fontStyle: 'italic', marginTop: 22 }}>Comparte tus recuerdos</p>
@@ -252,12 +257,18 @@ export default function QrPage() {
           padding: 32px 24px 28px;
           text-align: center;
         }
+        /* Ornamentacion decorativa en su propia linea, centrada */
+        .poster-inner :global(svg.ornament) {
+          display: block;
+          margin: 14px auto;
+          color: #b08a4a;
+        }
         .qr-frame {
           background: #fff;
           padding: 18px;
           display: inline-block;
           border-radius: 6px;
-          margin-top: 10px;
+          margin: 10px auto 0;
         }
         .pin-pill {
           display: inline-block;
