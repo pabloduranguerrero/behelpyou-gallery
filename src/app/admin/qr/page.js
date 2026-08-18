@@ -74,18 +74,45 @@ export default function QrPage() {
     }
 
     // QR
+    const QR_SIZE = 720;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(W / 2 - QR_SIZE / 2 - 24, 440 - 24, QR_SIZE + 48, QR_SIZE + 48);
+
     const svg = node.querySelector('svg');
     if (svg) {
-      const xml = new XMLSerializer().serializeToString(svg);
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      const svg64 = btoa(unescape(encodeURIComponent(xml)));
-      img.src = 'data:image/svg+xml;base64,' + svg64;
-      await new Promise((res) => { img.onload = res; });
-      const QR_SIZE = 720;
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(W / 2 - QR_SIZE / 2 - 24, 440 - 24, QR_SIZE + 48, QR_SIZE + 48);
-      ctx.drawImage(img, W / 2 - QR_SIZE / 2, 440, QR_SIZE, QR_SIZE);
+      try {
+        // Clonamos y forzamos dimensiones explicitas + xmlns para maxima compatibilidad
+        const svgClone = svg.cloneNode(true);
+        svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        svgClone.setAttribute('width', String(QR_SIZE));
+        svgClone.setAttribute('height', String(QR_SIZE));
+
+        const xml = new XMLSerializer().serializeToString(svgClone);
+        const svgBlob = new Blob([xml], { type: 'image/svg+xml;charset=utf-8' });
+        const svgUrl = URL.createObjectURL(svgBlob);
+
+        const img = new Image();
+        img.decoding = 'sync';
+        await new Promise((resolve, reject) => {
+          img.onload = () => resolve();
+          img.onerror = () => reject(new Error('QR image load failed'));
+          img.src = svgUrl;
+        });
+        // decode() ayuda en Safari a garantizar que la imagen esta lista
+        if (img.decode) { try { await img.decode(); } catch {} }
+
+        ctx.drawImage(img, W / 2 - QR_SIZE / 2, 440, QR_SIZE, QR_SIZE);
+        URL.revokeObjectURL(svgUrl);
+      } catch (err) {
+        console.error('Error dibujando QR en canvas', err);
+        // Fallback: escribimos la URL en grande para que al menos sirva
+        ctx.fillStyle = '#1a1a1a';
+        ctx.font = '600 24px "Inter", system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Escanea desde:', W / 2, 780);
+        ctx.font = '500 22px monospace';
+        ctx.fillText(eventUrl, W / 2, 820);
+      }
     }
 
     // Texto invitación
@@ -113,6 +140,47 @@ export default function QrPage() {
 
   const printPage = () => window.print();
 
+  // Descarga solo el QR (sin cartel). Alternativa segura en cualquier navegador.
+  const downloadQrOnly = async () => {
+    const node = cardRef.current;
+    const svg = node?.querySelector('svg');
+    if (!svg) return;
+    try {
+      const SIZE = 1200;
+      const svgClone = svg.cloneNode(true);
+      svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      svgClone.setAttribute('width', String(SIZE));
+      svgClone.setAttribute('height', String(SIZE));
+
+      const xml = new XMLSerializer().serializeToString(svgClone);
+      const blob = new Blob([xml], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(blob);
+
+      const img = new Image();
+      await new Promise((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error('QR image load failed'));
+        img.src = svgUrl;
+      });
+      if (img.decode) { try { await img.decode(); } catch {} }
+
+      const c = document.createElement('canvas');
+      c.width = SIZE; c.height = SIZE;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, SIZE, SIZE);
+      ctx.drawImage(img, 0, 0, SIZE, SIZE);
+      URL.revokeObjectURL(svgUrl);
+
+      const url = c.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = url; a.download = `qr-solo-${slug}.png`;
+      a.click();
+    } catch (e) {
+      alert('No se pudo generar el QR: ' + (e?.message || e));
+    }
+  };
+
   return (
     <>
       <BrandHeader rightSlot={<Link href="/admin" className="btn btn-ghost btn-sm">← Volver al panel</Link>} />
@@ -138,7 +206,8 @@ export default function QrPage() {
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <button className="btn btn-outline btn-sm" onClick={printPage}>Imprimir</button>
-            <button className="btn btn-gold btn-sm" onClick={downloadPng}>Descargar PNG</button>
+            <button className="btn btn-outline btn-sm" onClick={downloadQrOnly}>Solo QR</button>
+            <button className="btn btn-gold btn-sm" onClick={downloadPng}>Descargar cartel</button>
           </div>
         </div>
 
