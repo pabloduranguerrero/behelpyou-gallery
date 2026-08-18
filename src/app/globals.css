@@ -91,7 +91,7 @@ h3.display { font-size: clamp(20px, 2.6vw, 26px); line-height: 1.25; }
   backdrop-filter: saturate(120%) blur(8px);
   position: sticky; top: 0; z-index: 30;
 }
-.topbar .logo img { height: 36px; width: auto; display: block; }
+.topbar .logo img { height: 56px; width: auto; display: block; }
 .topbar .right { display: flex; gap: 14px; align-items: center; }
 .topbar a { color: var(--ink); text-decoration: none; font-weight: 500; font-size: 14px; }
 .topbar a:hover { color: var(--gold); }
@@ -432,7 +432,7 @@ h3.display { font-size: clamp(20px, 2.6vw, 26px); line-height: 1.25; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
   .tile { aspect-ratio: 1 / 1; }
   .topbar { padding: 14px 16px; }
-  .topbar .logo img { height: 28px; }
+  .topbar .logo img { height: 44px; }
   .hero { padding: 28px 8px 14px; }
   .input-pin { font-size: 18px; letter-spacing: 0.4em; }
 }
