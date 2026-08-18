@@ -214,24 +214,26 @@ export default function QrPage() {
         {/* Cartel */}
         <div className="poster-wrap">
           <div className="poster" ref={cardRef}>
-            <div className="poster-inner">
-              <p className="eyebrow eyebrow-gold" style={{ letterSpacing: '0.4em' }}>BeHelpYou&nbsp;·&nbsp;Gallery</p>
-              <h2 className="display" style={{ fontSize: 44, marginTop: 14 }}>{meta.couple}</h2>
-              {meta.date && <p className="muted" style={{ marginTop: 4, letterSpacing: '0.16em', textTransform: 'uppercase', fontSize: 12 }}>{meta.date}</p>}
+            <div className="poster-inner" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
+              <p className="eyebrow eyebrow-gold" style={{ letterSpacing: '0.4em', margin: 0 }}>BeHelpYou&nbsp;·&nbsp;Gallery</p>
+              <h2 className="display" style={{ fontSize: 44, marginTop: 14, marginBottom: 0 }}>{meta.couple}</h2>
+              {meta.date && (
+                <p className="muted" style={{ marginTop: 4, marginBottom: 0, letterSpacing: '0.16em', textTransform: 'uppercase', fontSize: 12 }}>
+                  {meta.date}
+                </p>
+              )}
 
-              <div style={{ display: 'block', textAlign: 'center', margin: '14px auto' }}>
+              <div style={{ margin: '18px 0 6px' }}>
                 <Ornament className="ornament" size={70} />
               </div>
 
-              <div style={{ display: 'block', textAlign: 'center', margin: '10px auto 0' }}>
-                <div className="qr-frame" style={{ display: 'inline-block' }}>
-                  <QRCodeSVG value={eventUrl} size={320} bgColor="#ffffff" fgColor="#1a1a1a" level="H" includeMargin={false} />
-                </div>
+              <div className="qr-frame" style={{ marginTop: 10 }}>
+                <QRCodeSVG value={eventUrl} size={320} bgColor="#ffffff" fgColor="#1a1a1a" level="H" includeMargin={false} />
               </div>
 
-              <p className="display" style={{ fontSize: 28, fontStyle: 'italic', marginTop: 22 }}>Comparte tus recuerdos</p>
-              <p className="muted" style={{ marginTop: 6 }}>Escanea el código con la cámara de tu móvil</p>
-              <p className="muted" style={{ fontSize: 12, marginTop: 18 }}>{eventUrl.replace(/^https?:\/\//, '')}</p>
+              <p className="display" style={{ fontSize: 28, fontStyle: 'italic', marginTop: 22, marginBottom: 0 }}>Comparte tus recuerdos</p>
+              <p className="muted" style={{ marginTop: 6, marginBottom: 0 }}>Escanea el código con la cámara de tu móvil</p>
+              <p className="muted" style={{ fontSize: 12, marginTop: 18, marginBottom: 0 }}>{eventUrl.replace(/^https?:\/\//, '')}</p>
 
               <div className="poster-foot">B E H E L P Y O U . C O M</div>
             </div>
