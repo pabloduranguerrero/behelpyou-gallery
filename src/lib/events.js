@@ -8,17 +8,17 @@
 // El slug es el identificador interno; el PIN es lo que tecleara el invitado.
 
 // === FALLBACK: edita aqui para anadir/cambiar bodas y PINs sin redesplegar variables ===
-const DEFAULT_PINS = 'teresa-pablo:TP2026';
+const DEFAULT_PINS = 'marina-alvaro:MA2026';
 
 export const EVENT_META = {
-  'teresa-pablo': {
-    couple: 'Teresa & Pablo',
-    date: '22 de Agosto de 2026',
+  'marina-alvaro': {
+    couple: 'Marina & Álvaro',
+    date: '3 de Octubre de 2026',
     location: '',
-    hashtag: '#TeresaYPablo2026',
+    hashtag: '#MarinaYAlvaro2026',
     // URL publica del invitado: a donde apunta el QR.
-    // Aqui ponemos la URL bonita de tu WordPress que carga el iframe.
-    publicUrl: 'https://behelpyou.com/galeria-teresaypablo'
+    // Aqui ponemos la URL bonita del File Manager de One.com.
+    publicUrl: 'https://behelpyou.com/galeria-marinayalvaro'
   }
 };
 
